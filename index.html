@@ -11,16 +11,41 @@
     <div id="dog-image-container">
       <!-- images here -->
     </div>
-
-    <hr>
+  
     <label for="select-breed">Filter Breeds That Start with:</label>
-    <select id="breed-dropdown" name="select-breed">
+    <select id="breed-dropdown" name="select-breed" onchange="filterList()" >
       <option value="a">a</option>
       <option value="b">b</option>
       <option value="c">c</option>
       <option value="d">d</option>
     </select>
+    <script> 
+    function filterList() {
+    fetch('https://dog.ceo/api/breeds/list/all')
+    .then(response => response.json())
+    .then(function(data) {
 
+      const container = document.querySelector('#dog-breeds')
+      while (container.firstChild) {container.removeChild(container.firstChild)}
+
+      const selectedValue = document.getElementById('breed-dropdown').value;
+      // console.log(selectedValue);
+
+      const allBreeds = data.message; 
+      for(const key in allBreeds) {
+        if(key[0] === selectedValue) {
+          const breed = document.createElement('li');
+          breed.append(`${key}: ${allBreeds[key]}`);
+          breed.addEventListener('click', function() {breed.style.color = "red";});
+          document.querySelector('#dog-breeds').append(breed);
+          // console.log(breed);
+        }
+      }
+    })
+  }
+    </script>
+    <div id="newList"></div>
+  
     <ul id="dog-breeds">
 
     </ul>
